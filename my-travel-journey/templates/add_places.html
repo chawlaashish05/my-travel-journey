@@ -1,0 +1,74 @@
+{% extends "layout.html" %}
+{% block title %}
+    Add Places
+{% endblock %}
+{% block main %}
+
+<form action="/add_places" method="post">
+    <div class="text-box">
+        <header>
+            <h1 style="font-size: 50px; font-family: 'Comic Sans MS', sans-serif; font-weight: bold;">This is My Travel Journey</h1>
+            <br>
+            <p style="font-size: 30px; font-family: 'Comic Sans MS', sans-serif;">Make Memories, Leave Footprints</p>
+        </header>
+    </div>
+
+    <div class="mb-4"></div> <!-- Add margin at the bottom of the first box -->
+
+    <div class="text-box">
+        <p style="font-size: 25px; font-family: 'Comic Sans MS', sans-serif;">I want to add a place which...</p>
+        <div class="form-group">
+            <label class="form-check-label">
+                <input type="radio" name="visit_status" value="visited">
+                <span class="dot"></span> I have already visited
+            </label>
+        </div>
+        <div class="form-group">
+            <label class="form-check-label">
+                <input type="radio" name="visit_status" value="to_visit">
+                <span class="dot"></span> I want to visit
+            </label>
+        </div>
+        <div class="form-group">
+            <label for="place_name">Place Name:</label>
+            <input type="text" id="place_name" name="place_name" class="form-control" required list="places_list">
+            <!-- Search bar for places -->
+            <datalist id="places_list"></datalist>
+        </div>
+        <div class="form-group">
+            <label for="visit_date">Visit Date:</label>
+            <input type="date" id="visit_date" name="visit_date" class="form-control" required>
+        </div>
+        <button type="submit" class="btn btn-primary">Add Place</button>
+    </div>
+</form>
+
+<!-- OpenStreetMap Nominatim API for interactive search -->
+<script>
+    // Function to fetch autocomplete suggestions from Nominatim API
+    function fetchAutocomplete() {
+        var input = document.getElementById('place_name');
+        var dataList = document.getElementById('places_list');
+
+        // Clear existing suggestions
+        dataList.innerHTML = '';
+
+        // Fetch autocomplete suggestions from Nominatim API
+        fetch('https://nominatim.openstreetmap.org/search?format=json&q=' + input.value)
+            .then(response => response.json())
+            .then(data => {
+                data.forEach(item => {
+                    // Create option element for each suggestion
+                    var option = document.createElement('option');
+                    option.value = item.display_name;
+                    dataList.appendChild(option);
+                });
+            })
+            .catch(error => console.error('Error fetching autocomplete data:', error));
+    }
+
+    // Call the fetchAutocomplete function when the input value changes
+    document.getElementById('place_name').addEventListener('input', fetchAutocomplete);
+</script>
+
+{% endblock %}

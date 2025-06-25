@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+{% block title %}
+    Home
+{% endblock %}
+{% block main %}
+    <div class="text-box">
+    <header>
+        <h1 style="font-size: 50px; font-family: 'Comic Sans MS', sans-serif; font-weight: bold;">This is My Travel Journey</h1>
+        <br>
+        <p style="font-size: 30px; font-family: 'Comic Sans MS', sans-serif;">Make Memories, Leave Footprints</p>
+    </header>
+    </div>
+
+    <div class="mb-4"></div> <!-- Add margin at the bottom of the first box -->
+
+
+    <div class="row justify-content-center gap-3">
+        <div class="col-md-3">
+            <div class="text-box">
+                <p style="font-size: 20px; font-family: 'Comic Sans MS', sans-serif;">Click here to add new places</p><a href="/add_places" class="btn btn-primary btn-lg">Add Places</a>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="text-box">
+                <p style="font-size: 20px; font-family: 'Comic Sans MS', sans-serif;">Click here to view your places</p><a href="/my_places" class="btn btn-primary btn-lg">My Places</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}

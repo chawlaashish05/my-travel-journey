@@ -1,0 +1,128 @@
+{% extends "layout.html" %}
+{% block title %}
+    My Places
+{% endblock %}
+{% block main %}
+
+<form action="/my_places" method="post">
+    <div class="text-box">
+        <header>
+            <h1 style="font-size: 50px; font-family: 'Comic Sans MS', sans-serif; font-weight: bold;">This is My Travel Journey</h1>
+            <br>
+            <p style="font-size: 30px; font-family: 'Comic Sans MS', sans-serif;">Make Memories, Leave Footprints</p>
+        </header>
+    </div>
+
+    <div class="mb-4"></div> <!-- Add margin at the bottom of the first box -->
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="text-box">
+                    <p style="font-size: 25px; font-family: 'Comic Sans MS', sans-serif; font-weight: bold;">My Places</p>
+
+                    <p style="font-size: 20px; font-family: 'Comic Sans MS', sans-serif;">Filter by type:</p>
+
+                    <div class="form-group">
+                        <select id="filter_type" class="form-control">
+                            <option value="all">All</option>
+                            <option value="visited">Visited</option>
+                            <option value="to_visit">To Visit</option>
+                        </select>
+                    </div>
+
+                    <table id="places_table" class="table table-striped">
+                        <colgroup>
+                            <col style="width: 70%;">
+                            <col style="width: 30%;">
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th style="font-size: 20px; font-family: 'Comic Sans MS', sans-serif;">Place</th>
+                                <th style="font-size: 20px; font-family: 'Comic Sans MS', sans-serif;">Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <!-- Table rows will be populated dynamically using JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div id="map" style="height: 400px; width: 600px;"></div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+
+<script>
+    var map;
+    var markers = [];
+
+    // Function to fetch and display places based on filter type
+    function fetchPlaces() {
+        var filterType = document.getElementById('filter_type').value;
+        fetch('/my_places', {
+            method: 'POST',
+            body: JSON.stringify({ filter_type: filterType }),
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            var tableBody = document.getElementById('places_table').getElementsByTagName('tbody')[0];
+
+            tableBody.innerHTML = ''; // Clear existing table rows
+            data.forEach(place => {
+                var row = tableBody.insertRow();
+                var placeNameCell = row.insertCell(0);
+                var dateCell = row.insertCell(1);
+                placeNameCell.innerText = place.place_name;
+                dateCell.innerText = place.date;
+            });
+
+            // Clear existing markers
+            markers.forEach(marker => map.removeLayer(marker));
+            markers = [];
+
+            // Mark places on the map
+            data.forEach(place => {
+                fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(place.place_name)}`)
+                .then(response => response.json())
+                .then(geoData => {
+                    if (geoData && geoData.length > 0) {
+                        var location = geoData[0];
+                        var markerColor = place.status === 'visited' ? 'pink' : 'blue';
+                        var marker = L.marker([location.lat, location.lon], { icon: L.divIcon({ className: 'my-icon', html: `<div style="background-color: ${markerColor}; border-radius: 50%; width: 10px; height: 10px;"></div>` }) }).addTo(map);
+                        marker.bindPopup(place.place_name);
+                        markers.push(marker);
+                    }
+                });
+            });
+        })
+        .catch(error => console.error('Error fetching places:', error));
+    }
+
+    // Initialize the map
+    function initMap() {
+        map = L.map('map').setView([0, 0], 2); // Set initial view to world
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        // Call fetchPlaces function when the page loads
+        fetchPlaces();
+    }
+
+    // Call initMap function when the page loads
+    window.onload = initMap;
+
+    // Add event listener to the filter select input
+    document.getElementById('filter_type').addEventListener('change', fetchPlaces);
+</script>
+
+{% endblock %}

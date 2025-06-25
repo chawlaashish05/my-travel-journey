@@ -1,0 +1,40 @@
+/* Size for brand */
+nav .navbar-brand
+{
+    font-size: xx-large;
+}
+
+/* Colors for brand */
+nav .navbar-brand .black
+{
+    color: black;
+    font-family: Comic Sans MS;
+
+}
+
+body {
+    /* Set background color or other styles if needed */
+}
+
+.content-container {
+    background-image: url('/static/map.jpg');
+    background-size: 70%; /* Ensures the background image is shown only once */
+    background-position: center; /* Positions the background image in the center */
+    background-repeat: no-repeat; /* Prevents the background image from repeating */
+    padding: 130px; /* Adjust padding as needed to provide space between content and background */
+}
+
+.text-box {
+    background-color: rgba(211, 211, 211, 0.9); /* Light grey with 50% opacity */
+    padding: 20px; /* Adjust padding as needed */
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /* Shadow effect */
+    display: inline-block; /* Adjust size based on content */
+}
+
+.form-group{
+    font-family: Comic Sans MS;
+    font-size: 20px;
+}
+
+

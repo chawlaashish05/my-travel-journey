@@ -1,0 +1,83 @@
+{% extends "layout.html" %}
+{% block title %}
+    Notes
+{% endblock %}
+
+{% block main %}
+<form action="/notes" method="post">
+    <div class="text-box">
+        <header>
+            <h1 style="font-size: 50px; font-family: 'Comic Sans MS', sans-serif; font-weight: bold;">This is My Travel Journey</h1>
+            <br>
+            <p style="font-size: 30px; font-family: 'Comic Sans MS', sans-serif;">Make Memories, Leave Footprints</p>
+        </header>
+    </div>
+
+    <div class="mb-4"></div> <!-- Add margin at the bottom of the first box -->
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 offset-md-3">
+                <div class="note-container">
+                    <div class="form-group">
+                        <textarea id="note_title" name="title" class="form-control note-title" rows="1" placeholder="Title"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <textarea id="note_content" name="content" class="form-control note-content" rows="5" placeholder="Write your notes here..."></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Save Note</button>
+                </div>
+
+                <div class="text-box">
+                    <h2 style="font-size: 25px; font-family: 'Comic Sans MS', sans-serif; font-weight: bold;">My Notes</h2>
+                    <table id="notes_table" class="table table-striped">
+                        <colgroup>
+                            <col style="width: 40%;">
+                            <col style="width: 60%;">
+                        </colgroup>
+                        <thead>
+                            <tr>
+                                <th style="font-size: 20px; font-family: 'Comic Sans MS', sans-serif;">Title</th>
+                                <th style="font-size: 20px; font-family: 'Comic Sans MS', sans-serif;">Text</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for note in notes %}
+                                <tr>
+                                    <td>{{ note.title }}</td>
+                                    <td>{{ note.content }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<style>
+    .note-container {
+        background-color: #f9f9f9;
+        border: 1px solid #ccc;
+        padding: 20px;
+        margin-bottom: 20px;
+    }
+    .note-title {
+        font-weight: bold;
+    }
+    .note-content {
+        line-height: 1.5;
+        white-space: pre-wrap;
+    }
+    .text-box {
+        margin-top: 40px;
+    }
+    #notes_table {
+        width: 100%;
+        table-layout: fixed;
+    }
+</style>
+{% endblock %}
+
+
